@@ -10,7 +10,7 @@ import Settings from "./Settings";
 import { useReactiveVar } from "@apollo/client";
 import { authenticatedVar } from "../../constants/authenticated";
 
-import { Page } from "../interfaces/page.interface";
+import { Page } from "../../interfaces/page.interface";
 
 const pages :Page[] = [
   {
