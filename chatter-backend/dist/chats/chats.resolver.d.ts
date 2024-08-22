@@ -8,7 +8,7 @@ export declare class ChatsResolver {
     constructor(chatsService: ChatsService);
     createChat(createChatInput: CreateChatInput, user: TokenPayload): Promise<Chat>;
     findAll(): Promise<Chat[]>;
-    findOne(id: number): string;
+    findOne(_id: string): Promise<Chat>;
     updateChat(updateChatInput: UpdateChatInput): string;
     removeChat(id: number): string;
 }

@@ -4,20 +4,24 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
+import { ListItemButton } from "@mui/material";
+import { Chat } from "../../../gql/graphql";
+import router from "../../Routes";
 
 interface ChatListProps {
-  name?: string | null;
+  chat:Chat
 }
 
-const ChatListItem = ({ name }: ChatListProps) => {
+const ChatListItem = ({ chat }: ChatListProps) => {
   return (
     <>
-      <ListItem alignItems="flex-start">
+      <ListItem alignItems="flex-start" disablePadding>
+        <ListItemButton onClick={()=>router.navigate(`/chats/${chat._id}`)} >
         <ListItemAvatar>
           <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
         </ListItemAvatar>
         <ListItemText
-          primary={name}
+          primary={chat.name}
           secondary={
             <>
               <Typography
@@ -32,6 +36,7 @@ const ChatListItem = ({ name }: ChatListProps) => {
             </>
           }
         />
+        </ListItemButton>
       </ListItem>
       <Divider variant="inset" component="li" />
     </>

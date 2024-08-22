@@ -31,8 +31,8 @@ let ChatsResolver = class ChatsResolver {
     findAll() {
         return this.chatsService.findAll();
     }
-    findOne(id) {
-        return this.chatsService.findOne(id);
+    findOne(_id) {
+        return this.chatsService.findOne(_id);
     }
     updateChat(updateChatInput) {
         return this.chatsService.update(updateChatInput.id, updateChatInput);
@@ -59,9 +59,9 @@ __decorate([
 ], ChatsResolver.prototype, "findAll", null);
 __decorate([
     (0, graphql_1.Query)(() => chat_entity_1.Chat, { name: 'chat' }),
-    __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.Int })),
+    __param(0, (0, graphql_1.Args)('_id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], ChatsResolver.prototype, "findOne", null);
 __decorate([

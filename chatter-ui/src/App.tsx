@@ -14,6 +14,7 @@ import Header from "./components/header/Header";
 import Snackbar from "./components/snackbar/Snackbar";
 import ChatList from "./components/chat-list/ChatList";
 import { usePath } from "./hooks/usePath";
+import { Height } from "@mui/icons-material";
 
 const darkTheme = createTheme({
   palette: {
@@ -23,6 +24,7 @@ const darkTheme = createTheme({
 
 const App = () => {
   const { path } = usePath();
+  const showChatList = (path === "/"|| path.includes("chats"));
 
   return (
     <ApolloProvider client={client}>
@@ -30,7 +32,7 @@ const App = () => {
         <CssBaseline />
         <Header />
         <Guard>
-          {path === "/" ? (
+          {showChatList ? (
             <Grid container>
               <Grid item md={3}>
                 <ChatList />
@@ -51,7 +53,7 @@ const App = () => {
 
 const Routes = () => {
   return (
-    <Container>
+    <Container sx={{height: '100%'}}>
       <RouterProvider router={router} />
     </Container>
   );

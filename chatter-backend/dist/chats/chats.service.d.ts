@@ -6,7 +6,7 @@ export declare class ChatsService {
     constructor(chatsRepository: ChatsRepository);
     create(createChatInput: CreateChatInput, userId: string): Promise<import("./entities/chat.entity").Chat>;
     findAll(): Promise<import("./entities/chat.entity").Chat[]>;
-    findOne(id: number): string;
+    findOne(_id: string): Promise<import("./entities/chat.entity").Chat>;
     update(id: number, updateChatInput: UpdateChatInput): string;
     remove(id: number): string;
 }

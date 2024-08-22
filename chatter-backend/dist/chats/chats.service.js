@@ -22,8 +22,8 @@ let ChatsService = class ChatsService {
     async findAll() {
         return this.chatsRepository.find({});
     }
-    findOne(id) {
-        return `This action returns a #${id} chat`;
+    async findOne(_id) {
+        return this.chatsRepository.findOne({ _id });
     }
     update(id, updateChatInput) {
         return `This action updates a #${id} chat`;
