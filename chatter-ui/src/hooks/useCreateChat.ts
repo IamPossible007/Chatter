@@ -11,20 +11,21 @@ const createChatDocument = graphql(`
 `);
 
 const useCreateChat = () => {
-  return useMutation(createChatDocument,{
+  return useMutation(createChatDocument, {
     update(cache, { data }) {
       cache.modify({
-        fields:{
+        fields: {
           chats(existingChats = []) {
             const newChatRef = cache.writeFragment({
               data: data?.createChat,
-              fragment: ChatFragment
+              fragment: ChatFragment,
+              fragmentName: "ChatFragment",
             });
             return [...existingChats, newChatRef];
-          }
-        }
-      })
-    }
+          },
+        },
+      });
+    },
   });
 };
 

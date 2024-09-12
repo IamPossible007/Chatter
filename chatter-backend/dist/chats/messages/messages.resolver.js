@@ -33,7 +33,7 @@ let MessagesResolver = class MessagesResolver {
         return this.messagesService.getMessages(getMessageArgs);
     }
     messageCreated(messageCreatedArgs) {
-        return this.messagesService.messageCreated(messageCreatedArgs);
+        return this.messagesService.messageCreated();
     }
 };
 exports.MessagesResolver = MessagesResolver;
@@ -57,9 +57,9 @@ __decorate([
 __decorate([
     (0, graphql_1.Subscription)(() => message_entity_1.Message, {
         filter: (payload, variables, context) => {
-            const message = payload.messageCreated;
             const userId = context.req.user._id;
-            return (payload.messageCreated.chatId === variables.chatId &&
+            const message = payload.messageCreated;
+            return (variables.chatIds.includes(message.chatId) &&
                 userId !== message.user._id.toHexString());
         },
     }),

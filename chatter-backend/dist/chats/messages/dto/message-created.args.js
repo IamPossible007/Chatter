@@ -16,10 +16,11 @@ let MessageCreatedArgs = class MessageCreatedArgs {
 };
 exports.MessageCreatedArgs = MessageCreatedArgs;
 __decorate([
-    (0, graphql_1.Field)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], MessageCreatedArgs.prototype, "chatId", void 0);
+    (0, graphql_1.Field)(() => [String]),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsNotEmpty)({ each: true }),
+    __metadata("design:type", Array)
+], MessageCreatedArgs.prototype, "chatIds", void 0);
 exports.MessageCreatedArgs = MessageCreatedArgs = __decorate([
     (0, graphql_1.ArgsType)()
 ], MessageCreatedArgs);

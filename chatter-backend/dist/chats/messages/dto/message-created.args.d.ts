@@ -1,3 +1,3 @@
 export declare class MessageCreatedArgs {
-    chatId: string;
+    chatIds: string[];
 }

@@ -48,26 +48,25 @@ export class MessagesService {
   }
 
   async getMessages({ chatId }: GetMessagesArgs) {
-   return this.chatsRepository.model.aggregate([
-    {$match:{_id: new Types.ObjectId(chatId)}},
-    {$unwind: "$messages"},
-    {$replaceRoot: {newRoot: "$messages"}},
-    {$lookup: {
-      from:'users',
-      localField: 'userId',
-      foreignField: '_id',
-      as: 'user'
-    }},
-    {$unwind: "$user"},
-    {$unset:"userId"},
-    {$set:{chatId}}
-   ])
+    return this.chatsRepository.model.aggregate([
+      { $match: { _id: new Types.ObjectId(chatId) } },
+      { $unwind: '$messages' },
+      { $replaceRoot: { newRoot: '$messages' } },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      { $unwind: '$user' },
+      { $unset: 'userId' },
+      { $set: { chatId } },
+    ]);
   }
 
-  async messageCreated({ chatId }: MessageCreatedArgs) {
-    await this.chatsRepository.findOne({
-      _id: chatId,
-    });
+  async messageCreated() {
     return this.pubSub.asyncIterator(MESSAGE_CREATED);
   }
 }

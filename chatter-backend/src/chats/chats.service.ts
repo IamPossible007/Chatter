@@ -16,22 +16,22 @@ export class ChatsService {
     });
   }
 
-  async findMany(prePipeLineStages: PipelineStage[]=[]) {
-    const chats =  this.chatsRepository.model.aggregate([
-      ...prePipeLineStages,
-      {$set:{latestMessage:{arrayElemAt: ['$messages', -1]}}},
-      {$unset: 'messages'},
+  async findMany(prePipelineStages: PipelineStage[]=[]) {
+    const chats = await this.chatsRepository.model.aggregate([
+      ...prePipelineStages,
+      { $set: { latestMessage: { $arrayElemAt: ['$messages', -1] } } },
+      { $unset: 'messages' },
       {
-        $lookup:{
+        $lookup: {
           from: 'users',
           localField: 'latestMessage.userId',
           foreignField: '_id',
-          as: 'latestMessage.user'
-        }
-      }
+          as: 'latestMessage.user',
+        },
+      },
     ]);
-    (await chats).forEach(chat=>{
-      if(!chat.latestMessage.user){
+    chats.forEach((chat)=>{
+      if(!chat.latestMessage?._id){
         delete chat.latestMessage;
         return;
       }

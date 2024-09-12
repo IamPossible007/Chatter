@@ -22,6 +22,11 @@ __decorate([
 ], CreateUserInput.prototype, "email", void 0);
 __decorate([
     (0, graphql_1.Field)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateUserInput.prototype, "username", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
     (0, class_validator_1.IsStrongPassword)(),
     __metadata("design:type", String)
 ], CreateUserInput.prototype, "password", void 0);

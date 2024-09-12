@@ -20,22 +20,23 @@ let ChatsService = class ChatsService {
     async create(createChatInput, userId) {
         return this.chatsRepository.create(Object.assign(Object.assign({}, createChatInput), { userId, messages: [] }));
     }
-    async findMany(prePipeLineStages = []) {
-        const chats = this.chatsRepository.model.aggregate([
-            ...prePipeLineStages,
-            { $set: { latestMessage: { arrayElemAt: ['$messages', -1] } } },
+    async findMany(prePipelineStages = []) {
+        const chats = await this.chatsRepository.model.aggregate([
+            ...prePipelineStages,
+            { $set: { latestMessage: { $arrayElemAt: ['$messages', -1] } } },
             { $unset: 'messages' },
             {
                 $lookup: {
                     from: 'users',
                     localField: 'latestMessage.userId',
                     foreignField: '_id',
-                    as: 'latestMessage.user'
-                }
-            }
+                    as: 'latestMessage.user',
+                },
+            },
         ]);
-        (await chats).forEach(chat => {
-            if (!chat.latestMessage.user) {
+        chats.forEach((chat) => {
+            var _a;
+            if (!((_a = chat.latestMessage) === null || _a === void 0 ? void 0 : _a._id)) {
                 delete chat.latestMessage;
                 return;
             }

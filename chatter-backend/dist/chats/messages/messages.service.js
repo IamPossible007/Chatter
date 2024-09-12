@@ -49,23 +49,22 @@ let MessagesService = class MessagesService {
     async getMessages({ chatId }) {
         return this.chatsRepository.model.aggregate([
             { $match: { _id: new mongoose_1.Types.ObjectId(chatId) } },
-            { $unwind: "$messages" },
-            { $replaceRoot: { newRoot: "$messages" } },
-            { $lookup: {
+            { $unwind: '$messages' },
+            { $replaceRoot: { newRoot: '$messages' } },
+            {
+                $lookup: {
                     from: 'users',
                     localField: 'userId',
                     foreignField: '_id',
-                    as: 'user'
-                } },
-            { $unwind: "$user" },
-            { $unset: "userId" },
-            { $set: { chatId } }
+                    as: 'user',
+                },
+            },
+            { $unwind: '$user' },
+            { $unset: 'userId' },
+            { $set: { chatId } },
         ]);
     }
-    async messageCreated({ chatId }) {
-        await this.chatsRepository.findOne({
-            _id: chatId,
-        });
+    async messageCreated() {
         return this.pubSub.asyncIterator(pubsub_triggers_1.MESSAGE_CREATED);
     }
 };
