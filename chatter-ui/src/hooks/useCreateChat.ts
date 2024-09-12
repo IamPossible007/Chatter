@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { graphql } from "../gql";
-import { ChatFragment } from "../fragments/chat.fragments";
+import { ChatFragment } from "../fragments/chat.fragment";
 
 const createChatDocument = graphql(`
   mutation CreateChat($createChatInput: CreateChatInput!) {

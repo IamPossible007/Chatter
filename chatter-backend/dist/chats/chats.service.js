@@ -12,18 +12,45 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatsService = void 0;
 const common_1 = require("@nestjs/common");
 const chats_repository_1 = require("./chats.repository");
+const mongoose_1 = require("mongoose");
 let ChatsService = class ChatsService {
     constructor(chatsRepository) {
         this.chatsRepository = chatsRepository;
     }
     async create(createChatInput, userId) {
-        return this.chatsRepository.create(Object.assign(Object.assign({}, createChatInput), { userId, userIds: createChatInput.userIds || [] }));
+        return this.chatsRepository.create(Object.assign(Object.assign({}, createChatInput), { userId, messages: [] }));
     }
-    async findAll() {
-        return this.chatsRepository.find({});
+    async findMany(prePipeLineStages = []) {
+        const chats = this.chatsRepository.model.aggregate([
+            ...prePipeLineStages,
+            { $set: { latestMessage: { arrayElemAt: ['$messages', -1] } } },
+            { $unset: 'messages' },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'latestMessage.userId',
+                    foreignField: '_id',
+                    as: 'latestMessage.user'
+                }
+            }
+        ]);
+        (await chats).forEach(chat => {
+            if (!chat.latestMessage.user) {
+                delete chat.latestMessage;
+                return;
+            }
+            chat.latestMessage.user = chat.latestMessage.user[0];
+            delete chat.latestMessage.userId;
+            chat.latestMessage.chatId = chat._id;
+        });
+        return chats;
     }
     async findOne(_id) {
-        return this.chatsRepository.findOne({ _id });
+        const chats = this.findMany([{ $match: { chatId: new mongoose_1.Types.ObjectId(_id) } }]);
+        if (!chats[0]) {
+            throw new common_1.NotFoundException(`Chat not found with ID: ${_id}`);
+        }
+        return chats[0];
     }
     update(id, updateChatInput) {
         return `This action updates a #${id} chat`;

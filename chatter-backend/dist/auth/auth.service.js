@@ -31,6 +31,12 @@ let AuthService = class AuthService {
             expires,
         });
     }
+    verifyWs(request) {
+        const cookies = request.headers.cookie.split('; ');
+        const authCookie = cookies.find((cookie) => cookie.includes('Authentication'));
+        const jwt = authCookie.split('Authentication=')[1];
+        return this.jwtService.verify(jwt);
+    }
     logout(response) {
         response.cookie('Authentication', '', {
             httpOnly: true,

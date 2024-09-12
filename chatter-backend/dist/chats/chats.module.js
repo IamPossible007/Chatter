@@ -13,15 +13,19 @@ const chats_resolver_1 = require("./chats.resolver");
 const database_module_1 = require("../common/database/database.module");
 const chat_entity_1 = require("./entities/chat.entity");
 const chats_repository_1 = require("./chats.repository");
+const messages_module_1 = require("./messages/messages.module");
+const chat_document_1 = require("./entities/chat.document");
 let ChatsModule = class ChatsModule {
 };
 exports.ChatsModule = ChatsModule;
 exports.ChatsModule = ChatsModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            database_module_1.DatabaseModule.forFeature([{ name: chat_entity_1.Chat.name, schema: chat_entity_1.ChatSchema }]),
+            database_module_1.DatabaseModule.forFeature([{ name: chat_entity_1.Chat.name, schema: chat_document_1.ChatSchema }]),
+            (0, common_1.forwardRef)(() => messages_module_1.MessagesModule),
         ],
         providers: [chats_resolver_1.ChatsResolver, chats_service_1.ChatsService, chats_repository_1.ChatsRepository],
+        exports: [chats_repository_1.ChatsRepository],
     })
 ], ChatsModule);
 //# sourceMappingURL=chats.module.js.map

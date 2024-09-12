@@ -25,13 +25,13 @@ let ChatsResolver = class ChatsResolver {
     constructor(chatsService) {
         this.chatsService = chatsService;
     }
-    createChat(createChatInput, user) {
+    async createChat(createChatInput, user) {
         return this.chatsService.create(createChatInput, user._id);
     }
-    findAll() {
-        return this.chatsService.findAll();
+    async findAll() {
+        return this.chatsService.findMany();
     }
-    findOne(_id) {
+    async findOne(_id) {
         return this.chatsService.findOne(_id);
     }
     updateChat(updateChatInput) {
@@ -49,20 +49,21 @@ __decorate([
     __param(1, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_chat_input_1.CreateChatInput, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], ChatsResolver.prototype, "createChat", null);
 __decorate([
+    (0, common_1.UseGuards)(gql_auth_guard_1.GqlAuthGuard),
     (0, graphql_1.Query)(() => [chat_entity_1.Chat], { name: 'chats' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], ChatsResolver.prototype, "findAll", null);
 __decorate([
     (0, graphql_1.Query)(() => chat_entity_1.Chat, { name: 'chat' }),
     __param(0, (0, graphql_1.Args)('_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], ChatsResolver.prototype, "findOne", null);
 __decorate([
     (0, graphql_1.Mutation)(() => chat_entity_1.Chat),

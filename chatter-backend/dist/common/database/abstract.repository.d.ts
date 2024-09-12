@@ -2,7 +2,7 @@ import { Logger } from '@nestjs/common';
 import { AbstractEntity } from './abstract.entity';
 import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 export declare abstract class AbstractRepository<T extends AbstractEntity> {
-    protected readonly model: Model<T>;
+    readonly model: Model<T>;
     protected abstract readonly logger: Logger;
     constructor(model: Model<T>);
     create(document: Omit<T, '_id'>): Promise<T>;

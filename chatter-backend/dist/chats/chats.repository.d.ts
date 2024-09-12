@@ -1,8 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { AbstractRepository } from '../common/database/abstract.repository';
 import { Model } from 'mongoose';
-import { Chat } from './entities/chat.entity';
-export declare class ChatsRepository extends AbstractRepository<Chat> {
+import { ChatDocument } from './entities/chat.document';
+export declare class ChatsRepository extends AbstractRepository<ChatDocument> {
     protected readonly logger: Logger;
-    constructor(chatModel: Model<Chat>);
+    constructor(chatModel: Model<ChatDocument>);
 }
