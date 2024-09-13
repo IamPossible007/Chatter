@@ -46,11 +46,14 @@ let MessagesService = class MessagesService {
         });
         return message;
     }
-    async getMessages({ chatId }) {
+    async getMessages({ chatId, skip, limit }) {
         return this.chatsRepository.model.aggregate([
             { $match: { _id: new mongoose_1.Types.ObjectId(chatId) } },
             { $unwind: '$messages' },
             { $replaceRoot: { newRoot: '$messages' } },
+            { $sort: { createdAt: -1 } },
+            { $skip: skip },
+            { $limit: limit },
             {
                 $lookup: {
                     from: 'users',
@@ -63,6 +66,13 @@ let MessagesService = class MessagesService {
             { $unset: 'userId' },
             { $set: { chatId } },
         ]);
+    }
+    async countMessages(chatId) {
+        return (await this.chatsRepository.model.aggregate([
+            { $match: { _id: new mongoose_1.Types.ObjectId(chatId) } },
+            { $unwind: '$messages' },
+            { $count: 'messages' }
+        ]))[0];
     }
     async messageCreated() {
         return this.pubSub.asyncIterator(pubsub_triggers_1.MESSAGE_CREATED);

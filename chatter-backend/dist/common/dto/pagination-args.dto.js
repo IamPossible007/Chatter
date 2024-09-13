@@ -9,19 +9,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetMessagesArgs = void 0;
+exports.PaginationArgs = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const class_validator_1 = require("class-validator");
-const pagination_args_dto_1 = require("../../../common/dto/pagination-args.dto");
-let GetMessagesArgs = class GetMessagesArgs extends pagination_args_dto_1.PaginationArgs {
+let PaginationArgs = class PaginationArgs {
 };
-exports.GetMessagesArgs = GetMessagesArgs;
+exports.PaginationArgs = PaginationArgs;
 __decorate([
-    (0, graphql_1.Field)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], GetMessagesArgs.prototype, "chatId", void 0);
-exports.GetMessagesArgs = GetMessagesArgs = __decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int),
+    __metadata("design:type", Number)
+], PaginationArgs.prototype, "skip", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int),
+    __metadata("design:type", Number)
+], PaginationArgs.prototype, "limit", void 0);
+exports.PaginationArgs = PaginationArgs = __decorate([
     (0, graphql_1.ArgsType)()
-], GetMessagesArgs);
-//# sourceMappingURL=get-messages.args.js.map
+], PaginationArgs);
+//# sourceMappingURL=pagination-args.dto.js.map

@@ -15,6 +15,7 @@ const chat_entity_1 = require("./entities/chat.entity");
 const chats_repository_1 = require("./chats.repository");
 const messages_module_1 = require("./messages/messages.module");
 const chat_document_1 = require("./entities/chat.document");
+const chats_controller_1 = require("./chats.controller");
 let ChatsModule = class ChatsModule {
 };
 exports.ChatsModule = ChatsModule;
@@ -26,6 +27,7 @@ exports.ChatsModule = ChatsModule = __decorate([
         ],
         providers: [chats_resolver_1.ChatsResolver, chats_service_1.ChatsService, chats_repository_1.ChatsRepository],
         exports: [chats_repository_1.ChatsRepository],
+        controllers: [chats_controller_1.ChatsController],
     })
 ], ChatsModule);
 //# sourceMappingURL=chats.module.js.map

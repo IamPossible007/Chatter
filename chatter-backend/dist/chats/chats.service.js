@@ -20,10 +20,25 @@ let ChatsService = class ChatsService {
     async create(createChatInput, userId) {
         return this.chatsRepository.create(Object.assign(Object.assign({}, createChatInput), { userId, messages: [] }));
     }
-    async findMany(prePipelineStages = []) {
+    async findMany(prePipelineStages = [], paginationArgs) {
         const chats = await this.chatsRepository.model.aggregate([
             ...prePipelineStages,
-            { $set: { latestMessage: { $arrayElemAt: ['$messages', -1] } } },
+            {
+                $set: {
+                    latestMessage: {
+                        $cond: [
+                            '$messages',
+                            { $arrayElemAt: ['$messages', -1] },
+                            {
+                                createdAt: new Date(),
+                            },
+                        ],
+                    },
+                },
+            },
+            { $sort: { 'latestMessage.createdAt': -1 } },
+            { $skip: paginationArgs.skip },
+            { $limit: paginationArgs.limit },
             { $unset: 'messages' },
             {
                 $lookup: {
@@ -46,10 +61,15 @@ let ChatsService = class ChatsService {
         });
         return chats;
     }
+    async countChats() {
+        return this.chatsRepository.model.countDocuments({});
+    }
     async findOne(_id) {
-        const chats = this.findMany([{ $match: { chatId: new mongoose_1.Types.ObjectId(_id) } }]);
+        const chats = await this.findMany([
+            { $match: { chatId: new mongoose_1.Types.ObjectId(_id) } },
+        ]);
         if (!chats[0]) {
-            throw new common_1.NotFoundException(`Chat not found with ID: ${_id}`);
+            throw new common_1.NotFoundException(`No chat was found with ID ${_id}`);
         }
         return chats[0];
     }

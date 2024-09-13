@@ -10,6 +10,7 @@ export declare class MessagesService {
     private readonly pubSub;
     constructor(chatsRepository: ChatsRepository, usersService: UsersService, pubSub: PubSub);
     createMessage({ content, chatId }: CreateMessageInput, userId: string): Promise<Message>;
-    getMessages({ chatId }: GetMessagesArgs): Promise<any[]>;
+    getMessages({ chatId, skip, limit }: GetMessagesArgs): Promise<any[]>;
+    countMessages(chatId: string): Promise<any>;
     messageCreated(): Promise<AsyncIterator<unknown, any, undefined>>;
 }

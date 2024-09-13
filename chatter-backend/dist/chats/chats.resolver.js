@@ -21,6 +21,7 @@ const update_chat_input_1 = require("./dto/update-chat.input");
 const common_1 = require("@nestjs/common");
 const gql_auth_guard_1 = require("../auth/guards/gql-auth.guard");
 const current_user_decorator_1 = require("../auth/current-user.decorator");
+const pagination_args_dto_1 = require("../common/dto/pagination-args.dto");
 let ChatsResolver = class ChatsResolver {
     constructor(chatsService) {
         this.chatsService = chatsService;
@@ -28,8 +29,8 @@ let ChatsResolver = class ChatsResolver {
     async createChat(createChatInput, user) {
         return this.chatsService.create(createChatInput, user._id);
     }
-    async findAll() {
-        return this.chatsService.findMany();
+    async findAll(paginationArgs) {
+        return this.chatsService.findMany([], paginationArgs);
     }
     async findOne(_id) {
         return this.chatsService.findOne(_id);
@@ -54,8 +55,9 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(gql_auth_guard_1.GqlAuthGuard),
     (0, graphql_1.Query)(() => [chat_entity_1.Chat], { name: 'chats' }),
+    __param(0, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [pagination_args_dto_1.PaginationArgs]),
     __metadata("design:returntype", Promise)
 ], ChatsResolver.prototype, "findAll", null);
 __decorate([

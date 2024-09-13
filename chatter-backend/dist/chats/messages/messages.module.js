@@ -12,6 +12,7 @@ const messages_service_1 = require("./messages.service");
 const messages_resolver_1 = require("./messages.resolver");
 const chats_module_1 = require("../chats.module");
 const users_module_1 = require("../../users/users.module");
+const messages_controller_1 = require("./messages.controller");
 let MessagesModule = class MessagesModule {
 };
 exports.MessagesModule = MessagesModule;
@@ -19,6 +20,7 @@ exports.MessagesModule = MessagesModule = __decorate([
     (0, common_1.Module)({
         imports: [(0, common_1.forwardRef)(() => chats_module_1.ChatsModule), users_module_1.UsersModule],
         providers: [messages_resolver_1.MessagesResolver, messages_service_1.MessagesService],
+        controllers: [messages_controller_1.MessagesController],
     })
 ], MessagesModule);
 //# sourceMappingURL=messages.module.js.map

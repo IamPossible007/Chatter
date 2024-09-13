@@ -17,7 +17,7 @@ export class MessagesService {
     private readonly chatsRepository: ChatsRepository,
     private readonly usersService: UsersService,
     @Inject(PUB_SUB) private readonly pubSub: PubSub,
-  ) {}
+  ) { }
 
   async createMessage({ content, chatId }: CreateMessageInput, userId: string) {
     const messageDocument: MessageDocument = {
@@ -47,11 +47,14 @@ export class MessagesService {
     return message;
   }
 
-  async getMessages({ chatId }: GetMessagesArgs) {
+  async getMessages({ chatId, skip, limit }: GetMessagesArgs) {
     return this.chatsRepository.model.aggregate([
       { $match: { _id: new Types.ObjectId(chatId) } },
       { $unwind: '$messages' },
       { $replaceRoot: { newRoot: '$messages' } },
+      { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit },
       {
         $lookup: {
           from: 'users',
@@ -64,6 +67,15 @@ export class MessagesService {
       { $unset: 'userId' },
       { $set: { chatId } },
     ]);
+  }
+  async countMessages(chatId: string) {
+    return (
+      await this.chatsRepository.model.aggregate([
+        { $match: { _id: new Types.ObjectId(chatId) } },
+        { $unwind: '$messages' },
+        { $count: 'messages' }
+      ])
+    )[0];
   }
 
   async messageCreated() {
