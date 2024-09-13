@@ -21,10 +21,7 @@ let AuthService = class AuthService {
     async login(user, response) {
         const expires = new Date();
         expires.setSeconds(expires.getSeconds() + this.configService.getOrThrow('JWT_EXPIRATION'));
-        const tokenPayload = {
-            _id: user._id.toHexString(),
-            email: user.email,
-        };
+        const tokenPayload = Object.assign(Object.assign({}, user), { _id: user._id.toHexString() });
         const token = this.jwtService.sign(tokenPayload);
         response.cookie('Authentication', token, {
             httpOnly: true,

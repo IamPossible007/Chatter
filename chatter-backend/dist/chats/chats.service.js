@@ -13,9 +13,11 @@ exports.ChatsService = void 0;
 const common_1 = require("@nestjs/common");
 const chats_repository_1 = require("./chats.repository");
 const mongoose_1 = require("mongoose");
+const users_service_1 = require("../users/users.service");
 let ChatsService = class ChatsService {
-    constructor(chatsRepository) {
+    constructor(chatsRepository, usersService) {
         this.chatsRepository = chatsRepository;
+        this.usersService = usersService;
     }
     async create(createChatInput, userId) {
         return this.chatsRepository.create(Object.assign(Object.assign({}, createChatInput), { userId, messages: [] }));
@@ -55,7 +57,7 @@ let ChatsService = class ChatsService {
                 delete chat.latestMessage;
                 return;
             }
-            chat.latestMessage.user = chat.latestMessage.user[0];
+            chat.latestMessage.user = this.usersService.toEntity(chat.latestMessage.user[0]);
             delete chat.latestMessage.userId;
             chat.latestMessage.chatId = chat._id;
         });
@@ -83,6 +85,7 @@ let ChatsService = class ChatsService {
 exports.ChatsService = ChatsService;
 exports.ChatsService = ChatsService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [chats_repository_1.ChatsRepository])
+    __metadata("design:paramtypes", [chats_repository_1.ChatsRepository,
+        users_service_1.UsersService])
 ], ChatsService);
 //# sourceMappingURL=chats.service.js.map

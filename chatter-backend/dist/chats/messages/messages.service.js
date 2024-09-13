@@ -47,7 +47,7 @@ let MessagesService = class MessagesService {
         return message;
     }
     async getMessages({ chatId, skip, limit }) {
-        return this.chatsRepository.model.aggregate([
+        const messages = await this.chatsRepository.model.aggregate([
             { $match: { _id: new mongoose_1.Types.ObjectId(chatId) } },
             { $unwind: '$messages' },
             { $replaceRoot: { newRoot: '$messages' } },
@@ -66,6 +66,10 @@ let MessagesService = class MessagesService {
             { $unset: 'userId' },
             { $set: { chatId } },
         ]);
+        for (const message of messages) {
+            message.user = this.usersService.toEntity(message.user);
+        }
+        return messages;
     }
     async countMessages(chatId) {
         return (await this.chatsRepository.model.aggregate([

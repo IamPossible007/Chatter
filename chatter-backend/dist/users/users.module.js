@@ -13,16 +13,21 @@ const users_resolver_1 = require("./users.resolver");
 const users_repository_1 = require("./users.repository");
 const database_module_1 = require("../common/database/database.module");
 const user_entity_1 = require("./entities/user.entity");
+const users_controller_1 = require("./users.controller");
+const s3_module_1 = require("../common/s3/s3.module");
+const user_document_1 = require("./entities/user.document");
 let UsersModule = class UsersModule {
 };
 exports.UsersModule = UsersModule;
 exports.UsersModule = UsersModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            database_module_1.DatabaseModule.forFeature([{ name: user_entity_1.User.name, schema: user_entity_1.UserSchema }]),
+            s3_module_1.S3Module,
+            database_module_1.DatabaseModule.forFeature([{ name: user_entity_1.User.name, schema: user_document_1.UserSchema }]),
         ],
         providers: [users_resolver_1.UsersResolver, users_service_1.UsersService, users_repository_1.UsersRepository],
         exports: [users_service_1.UsersService],
+        controllers: [users_controller_1.UsersController],
     })
 ], UsersModule);
 //# sourceMappingURL=users.module.js.map

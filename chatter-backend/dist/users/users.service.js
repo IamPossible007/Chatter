@@ -13,13 +13,16 @@ exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const bcrypt = require("bcrypt");
 const users_repository_1 = require("./users.repository");
+const s3_service_1 = require("../common/s3/s3.service");
+const users_constants_1 = require("./users.constants");
 let UsersService = class UsersService {
-    constructor(usersRepository) {
+    constructor(usersRepository, s3Service) {
         this.usersRepository = usersRepository;
+        this.s3Service = s3Service;
     }
     async create(createUserInput) {
         try {
-            return await this.usersRepository.create(Object.assign(Object.assign({}, createUserInput), { password: await this.hashPassword(createUserInput.password) }));
+            return this.toEntity(await this.usersRepository.create(Object.assign(Object.assign({}, createUserInput), { password: await this.hashPassword(createUserInput.password) })));
         }
         catch (err) {
             if (err.message.includes('E11000')) {
@@ -28,25 +31,32 @@ let UsersService = class UsersService {
             throw err;
         }
     }
+    async uploadImage(file, userId) {
+        await this.s3Service.upload({
+            bucket: users_constants_1.USERS_BUCKET,
+            key: this.getUserImage(userId),
+            file,
+        });
+    }
     async hashPassword(password) {
         return bcrypt.hash(password, 10);
     }
     async findAll() {
-        return this.usersRepository.find({});
+        return (await this.usersRepository.find({})).map((userDocument) => this.toEntity(userDocument));
     }
     async findOne(_id) {
-        return this.usersRepository.findOne({ _id });
+        return this.toEntity(await this.usersRepository.findOne({ _id }));
     }
     async update(_id, updateUserInput) {
         if (updateUserInput.password) {
             updateUserInput.password = await this.hashPassword(updateUserInput.password);
         }
-        return this.usersRepository.findOneAndUpdate({ _id }, {
+        return this.toEntity(await this.usersRepository.findOneAndUpdate({ _id }, {
             $set: Object.assign({}, updateUserInput),
-        });
+        }));
     }
     async remove(_id) {
-        return this.usersRepository.findOneAndDelete({ _id });
+        return this.toEntity(await this.usersRepository.findOneAndDelete({ _id }));
     }
     async verifyUser(email, password) {
         const user = await this.usersRepository.findOne({ email });
@@ -54,12 +64,21 @@ let UsersService = class UsersService {
         if (!passwordIsValid) {
             throw new common_1.UnauthorizedException('Credentials are not valid.');
         }
+        return this.toEntity(user);
+    }
+    toEntity(userDocument) {
+        const user = Object.assign(Object.assign({}, userDocument), { imageUrl: this.s3Service.getObjectUrl(users_constants_1.USERS_BUCKET, this.getUserImage(userDocument._id.toHexString())) });
+        delete user.password;
         return user;
+    }
+    getUserImage(userId) {
+        return `${userId}.${users_constants_1.USERS_IMAGE_FILE_EXTENSION}`;
     }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [users_repository_1.UsersRepository])
+    __metadata("design:paramtypes", [users_repository_1.UsersRepository,
+        s3_service_1.S3Service])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map

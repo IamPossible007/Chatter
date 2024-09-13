@@ -69,6 +69,7 @@ import { AuthService } from './auth/auth.service';
     AuthModule,
     ChatsModule,
     PubSubModule,
+    
   ],
   controllers: [AppController],
   providers: [AppService],

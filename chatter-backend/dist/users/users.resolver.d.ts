@@ -11,5 +11,5 @@ export declare class UsersResolver {
     findOne(_id: string): Promise<User>;
     updateUser(updateUserInput: UpdateUserInput, user: TokenPayload): Promise<User>;
     removeUser(user: TokenPayload): Promise<User>;
-    getMe(user: TokenPayload): TokenPayload;
+    getMe(user: TokenPayload): Promise<User>;
 }

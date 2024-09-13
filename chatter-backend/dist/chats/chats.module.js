@@ -16,12 +16,14 @@ const chats_repository_1 = require("./chats.repository");
 const messages_module_1 = require("./messages/messages.module");
 const chat_document_1 = require("./entities/chat.document");
 const chats_controller_1 = require("./chats.controller");
+const users_module_1 = require("../users/users.module");
 let ChatsModule = class ChatsModule {
 };
 exports.ChatsModule = ChatsModule;
 exports.ChatsModule = ChatsModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            users_module_1.UsersModule,
             database_module_1.DatabaseModule.forFeature([{ name: chat_entity_1.Chat.name, schema: chat_document_1.ChatSchema }]),
             (0, common_1.forwardRef)(() => messages_module_1.MessagesModule),
         ],
