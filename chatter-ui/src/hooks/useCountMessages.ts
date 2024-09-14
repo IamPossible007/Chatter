@@ -7,13 +7,22 @@ const useCountMessages = (chatId: string) => {
   const [messagesCount, setMessagesCount] = useState<number | undefined>();
 
   const countMessages = useCallback(async () => {
-    const res = await fetch(`${API_URL}/messages/count?chatId=${chatId}`);
-    if (!res.ok) {
+    try {
+      const res = await fetch(`${API_URL}/messages/count?chatId=${chatId}`);
+      if (!res.ok) {
+        snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
+        return;
+      }
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : { messages: 0 };
+      if (typeof data.messages === "number") {
+        setMessagesCount(data.messages);
+      } else {
+        snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
+      }
+    } catch (error) {
       snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
-      return;
     }
-    const { messages } = await res.json();
-    setMessagesCount(messages);
   }, [chatId]);
 
   return { messagesCount, countMessages };
